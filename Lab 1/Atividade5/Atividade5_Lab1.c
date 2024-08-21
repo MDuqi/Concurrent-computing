@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-// Estrutura para armazenar os argumentos da thread
 typedef struct {
     int idThread;
     int nThreads;
@@ -52,19 +51,17 @@ void verificaVetor(int *vetor, int N) {
     }
 }
 
-// Funcao principal
 int main(int argc, char *argv[]) {
     int N, M;
     int *vetor;
-    pthread_t tid; // Identificador da thread
-    t_Args args;   // Estrutura de argumentos para a thread
+    pthread_t tid; 
+    t_Args args;   
 
     // Verifica se o numero de elementos e de threads foi passado na linha de comando
     if(argc<3) { 
       printf("--ERRO: informe a qtde de elementos no vetor <N> e threads <M>\n", argv[0]); 
       return 1;
    }
-
     N = atoi(argv[1]);
     M = atoi(argv[2]);
 
