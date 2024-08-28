@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int main(int argc, char *argv[]) {
+    if (argc < 3) {
+        printf("Uso: %s <dimensão N> <arquivo de saída>\n", argv[0]);
+        return 1;
+    }
+
+    int N = atoi(argv[1]);
+    char *filename = argv[2];
+
+    float *vetA = (float *) malloc(N * sizeof(float));
+    float *vetB = (float *) malloc(N * sizeof(float));
+    if (!vetA || !vetB) {
+        printf("Erro ao alocar memória\n");
+        return 2;
+    }
+
+    // Gera valores aleatórios
+    srand(time(NULL));
+    for (int i = 0; i < N; i++) {
+        vetA[i] = (float) rand() / RAND_MAX;
+        vetB[i] = (float) rand() / RAND_MAX;
+    }
+
+    // Calcula o produto interno
+    double produto_interno = 0.0;
+    for (int i = 0; i < N; i++) {
+        produto_interno += vetA[i] * vetB[i];
+    }
+
+    // Escreve os dados em um arquivo binário
+    FILE *file = fopen(filename, "wb");
+    if (!file) {
+        printf("Erro ao abrir o arquivo\n");
+        return 3;
+    }
+
+    fwrite(&N, sizeof(int), 1, file);
+    fwrite(vetA, sizeof(float), N, file);
+    fwrite(vetB, sizeof(float), N, file);
+    fwrite(&produto_interno, sizeof(double), 1, file);
+
+    fclose(file);
+    free(vetA);
+    free(vetB);
+
+    printf("Produto interno calculado e salvo em %s: %.6f\n", filename, produto_interno);
+
+    return 0;
+}
