@@ -14,6 +14,7 @@ int main(int argc, char*argv[]) {
    FILE * descritorArquivo; //descritor do arquivo de entrada
    size_t ret; //retorno da funcao de leitura no arquivo de entrada
    
+   printf("\n");
    //recebe os argumentos de entrada
    if(argc < 2) {
       fprintf(stderr, "Digite: %s <arquivo entrada>\n", argv[0]);
@@ -60,6 +61,7 @@ int main(int argc, char*argv[]) {
         fprintf(stdout, "%.6f ", matriz[i*colunas+j]);
       fprintf(stdout, "\n");
    }
+   printf("\n");
 
    //finaliza o uso das variaveis
    fclose(descritorArquivo);

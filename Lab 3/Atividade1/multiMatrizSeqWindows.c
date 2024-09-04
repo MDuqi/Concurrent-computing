@@ -18,18 +18,15 @@ float* lerMatrizBinario(const char* nomeArquivo, int* linhas, int* colunas) {
         exit(1);
     }
 
-    // Lê as dimensões da matriz
     fread(linhas, sizeof(int), 1, arq);
     fread(colunas, sizeof(int), 1, arq);
 
-    // Aloca memória para a matriz
     float* matriz = (float*)malloc((*linhas) * (*colunas) * sizeof(float));
     if (matriz == NULL) {
         fprintf(stderr, "Erro de alocação de memória\n");
         exit(2);
     }
 
-    // Lê os elementos da matriz do arquivo
     fread(matriz, sizeof(float), (*linhas) * (*colunas), arq);
 
     fclose(arq);
@@ -44,20 +41,20 @@ void escreverMatrizBinario(const char* nomeArquivo, float* matriz, int linhas, i
         exit(3);
     }
 
-    // Escreve as dimensões da matriz
     fwrite(&linhas, sizeof(int), 1, arq);
     fwrite(&colunas, sizeof(int), 1, arq);
-
-    // Escreve os elementos da matriz no arquivo
     fwrite(matriz, sizeof(float), linhas * colunas, arq);
 
     fclose(arq);
 }
 
+
 int main(int argc, char *argv[]) {
     int NA, MA, NB, MB;
     float *A, *B, *C;
-    double inicio, fim;
+    double inicio, fim, inicioTotal, fimTotal;
+
+    inicioTotal = get_time();
 
     if (argc < 4) {
         fprintf(stderr, "Uso: %s <matrizA.bin> <matrizB.bin> <matrizC.bin>\n", argv[0]);
@@ -69,7 +66,7 @@ int main(int argc, char *argv[]) {
     A = lerMatrizBinario(argv[1], &NA, &MA);
     B = lerMatrizBinario(argv[2], &NB, &MB);
     fim = get_time();
-    printf("Tempo de leitura: %lf segundos\n", fim - inicio);
+    printf("\nTempo de leitura: %lf segundos\n", fim - inicio);
 
     // Verifica se a multiplicação é possível
     if (MA != NB) {
@@ -93,18 +90,21 @@ int main(int argc, char *argv[]) {
         }
     }
     fim = get_time();
-    printf("Tempo de processamento: %lf segundos\n", fim - inicio);
+    printf("\nTempo de processamento da multiplicacao: %lf segundos\n", fim - inicio);
 
     // Escrita da matriz resultante em arquivo binário
     inicio = get_time();
     escreverMatrizBinario(argv[3], C, NA, MB);
     fim = get_time();
-    printf("Tempo de escrita: %lf segundos\n", fim - inicio);
+    printf("\nTempo de escrita: %lf segundos\n", fim - inicio);
 
     // Liberação de memória
     free(A);
     free(B);
     free(C);
+
+    fimTotal = get_time();
+    printf("\nTempo de Execucao total do programa: %lf segundos\n\n", fimTotal - inicioTotal);
 
     return 0;
 }
