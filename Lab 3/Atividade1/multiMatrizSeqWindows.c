@@ -62,11 +62,8 @@ int main(int argc, char *argv[]) {
     }
 
     // Leitura das matrizes de entrada
-    inicio = get_time();
     A = lerMatrizBinario(argv[1], &NA, &MA);
     B = lerMatrizBinario(argv[2], &NB, &MB);
-    fim = get_time();
-    printf("\nTempo de leitura: %lf segundos\n", fim - inicio);
 
     // Verifica se a multiplicação é possível
     if (MA != NB) {
@@ -80,7 +77,6 @@ int main(int argc, char *argv[]) {
     C = (float *)malloc(NA * MB * sizeof(float));
 
     // Multiplicação das matrizes
-    inicio = get_time();
     for (int i = 0; i < NA; i++) {
         for (int j = 0; j < MB; j++) {
             C[i * MB + j] = 0;
@@ -89,14 +85,9 @@ int main(int argc, char *argv[]) {
             }
         }
     }
-    fim = get_time();
-    printf("\nTempo de processamento da multiplicacao: %lf segundos\n", fim - inicio);
 
     // Escrita da matriz resultante em arquivo binário
-    inicio = get_time();
     escreverMatrizBinario(argv[3], C, NA, MB);
-    fim = get_time();
-    printf("\nTempo de escrita: %lf segundos\n", fim - inicio);
 
     // Liberação de memória
     free(A);
