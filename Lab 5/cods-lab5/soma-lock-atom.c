@@ -7,7 +7,6 @@
 #include <pthread.h>
 
 long int soma = 0; //variavel compartilhada entre as threads
-long int ultimo = -1; // Armazena o último múltiplo de 10 impresso
 pthread_mutex_t mutex; //variavel de lock para exclusao mutua
 
 //funcao executada pelas threads
@@ -31,14 +30,9 @@ void *ExecutaTarefa (void *arg) {
 void *extra (void *args) {
   printf("Extra : esta executando...\n");
   for (int i=0; i<10000; i++) {
-    pthread_mutex_lock(&mutex);
-    if (!(soma%10) && ultimo!=soma){//imprime se 'soma' for multiplo de 10
+     if (!(soma%10)) //imprime se 'soma' for multiplo de 10
         printf("soma = %ld \n", soma);
-        ultimo=soma;
-    } 
-    pthread_mutex_unlock(&mutex);
   }
-  
   printf("Extra : terminou!\n");
   pthread_exit(NULL);
 }
