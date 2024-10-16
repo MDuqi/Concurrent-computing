@@ -8,7 +8,7 @@
 char buffer1[N] = { '\0' };         // Buffer para Thread 1 -> Thread 2
 char *buffer2;        // Buffer para Thread 2 -> Thread 3
 long fileSize;
-sem_t sem1, sem2;     // Semáforos para sincronização entre as threads
+sem_t sem1, sem2, sem3;     // Semáforos para sincronização entre as threads
 FILE *fileIn, *fileOut; // Arquivos de entrada e saída
 
 
@@ -45,6 +45,7 @@ void *thread1(void *arg) {
         sem_wait(&sem2);
         memset(buffer1, '\0', N);
     }
+    sem_post(&sem3);
     pthread_exit(NULL);
 }
 
@@ -61,8 +62,8 @@ void *thread2(void *arg) {
             buffer2[j]=buffer1[(chartransf%N)];
             chartransf++; 
             i++; j++;
-            printf("\nchartreanf: %ld  n: %d   i: %d \n", chartransf,n, i);
-            if(chartransf%N==0){
+            printf("chartreanf: %ld  n: %d   i: %d \n\n", chartransf,n, i);
+            if(chartransf%N==0 && chartransf<fileSize){
                 printf("\ncaracteres enviados para o buffer2 ate agora: %ld\n\n", chartransf);
                 sem_post(&sem2);
                 sem_wait(&sem1);
@@ -70,20 +71,28 @@ void *thread2(void *arg) {
             }
         }
         puts(buffer2);
+        puts("\n");
         buffer2[j]='\n';
         i=0;
         j++; n++;
             
         
     }
-    printf("\n");
-    puts(buffer2);
+    
+    sem_post(&sem2);
     pthread_exit(NULL);
 }
 
 // Thread 3: Imprimir o buffer2 no arquivo de saída
 void *thread3(void *arg) {
+    printf("\nThread 3 iniciada\n");
+    sem_wait(&sem3);  // Espera por dados no buffer2
     
+    fputs(buffer2, fileOut);  // Imprime o buffer2 no arquivo de saída
+    fflush(fileOut);  // Garante que os dados sejam gravados imediatamente
+    memset(buffer2, '\0', (N + 10));  // Limpa o buffer2
+
+     pthread_exit(NULL);
 }
 
 // Função principal
@@ -121,6 +130,7 @@ int main(int argc, char *argv[]) {
     // Inicializar os semáforos
     sem_init(&sem1, 0, 0); // Inicializa com 0 para garantir a sincronização
     sem_init(&sem2, 0, 0);
+    sem_init(&sem3, 0, 0);
 
     // Criar as threads
     if (pthread_create(&tid[0], NULL, thread1, NULL)) { 
@@ -143,6 +153,7 @@ int main(int argc, char *argv[]) {
     //--finaliza o semaforo
     sem_destroy(&sem1);
     sem_destroy(&sem2);
+    sem_destroy(&sem3);
 
     // Liberar a memória do buffer
     free(buffer2);
