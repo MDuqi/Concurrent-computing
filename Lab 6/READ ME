@@ -1,0 +1,4 @@
+A comparação entre as implementações da minha versão de rwlock com prioridade para operações de escrita (drwlock) e a versão utilizando
+a biblioteca padrão (pthread_rwlock) mostra que a versão com pthread_rwlock é mais eficiente, com um tempo de execução 2 segundos mais rapido no geral.
+Embora o número total de operações de inserção, remoção e leitura seja semelhante,
+a minha implementação apresentou mais bloqueios e espera por leitura e escrita, indicando maior ineficiência no gerenciamento de concorrência.
