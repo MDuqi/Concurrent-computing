@@ -7,7 +7,7 @@ import (
 
 func tarefa(str chan string) {
 	//escreve no canal
-	str <- "Bom dia"
+	//str <- "Bom dia"
 
 	fmt.Printf("Terminando...\n")
 }

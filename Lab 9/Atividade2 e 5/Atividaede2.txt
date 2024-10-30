@@ -1,0 +1,42 @@
+
+
+2. Por que não foi necessário usar Sleep na função main?
+
+Normalmente, Sleep é usado para pausar a execução e garantir que uma goroutine termine antes de o programa principal 
+prosseguir. No entanto, neste código, isso não foi necessário porque o canal str já gerencia a sincronização entre a 
+função main e a goroutine tarefa.
+
+Como o canal str é não-bufferizado, ele exige que uma mensagem seja recebida exatamente quando é enviada, 
+caso contrário, o programa fica esperando. Ou seja, enquanto a função main não lê o valor do canal, 
+o envio de "Bom dia" pela goroutine tarefa fica em espera. Quando main lê o valor do canal (msg = <-str), ela 
+desbloqueia a goroutine para continuar.
+ 
+Assim, a sincronização entre main e tarefa ocorre automaticamente, e não precisamos adicionar Sleep. 
+Esse comportamento permite que o Go gerencie a troca de mensagens entre a função main e a goroutine sem que nenhuma
+delas continue até que a comunicação pelo canal esteja completa.
+
+
+__________________________________________________________________________________________________________________________________________________
+
+
+3. O que acontece se a linha msg = <-str for comentada?
+Ao comentar a linha msg = <-str, a função main nunca lê o valor do canal str. Como str é um canal não-bufferizado, 
+ele exige que uma mensagem seja recebida no momento em que é enviada. Sem a linha msg = <-str, a goroutine tarefa 
+tenta enviar "Bom dia" para o canal, mas fica "preso" ali, pois não há ninguém para ler a mensagem.
+
+Isso cria um deadlock (bloqueio), em que tanto a função main quanto a goroutine tarefa ficam esperando indefinidamente.
+
+Como resultado, o Go detecta que todas as goroutines estão "asleep" (ou seja, bloqueadas) e exibe 
+uma mensagem de erro para indicar o deadlock. A saída do programa é a seguinte:
+
+----------------------------------------------------------------------------------
+Terminando...
+fatal error: all goroutines are asleep - deadlock!
+
+goroutine 1 [chan receive]:
+main.main()
+        D:/Docs matheus/UFRJ/6-Sexto Periodo/Prog Concorrente/Concurrent-computing/Lab 9/cods-lab9/channels.go:25 +0x99
+exit status 2
+
+----------------------------------------------------------------------------------
+
