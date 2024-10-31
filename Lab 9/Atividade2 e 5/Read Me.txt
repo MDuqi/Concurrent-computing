@@ -1,0 +1,7 @@
+Está pasta contem 4 arquivos além deste, um é o Atividade2.txt que possui a resolução escrita da questão 2 do Lab 9 
+contendo as analises feitas, e os outros 3 arquivos são a resolução da Atividade 5.
+
+Entre os arquivos da atividade 5 temos, em Atividade5.go o codigo concorrente q verifica os primos 
+nos primeiros N=100 números, que então armazena esses números em um arquivo primos.txt que será lido pelo 
+programa sequencial VerificaPrimos.go que verifica a corretude do codigo concorrente, e avisa se qualquer 
+inconsistencia for detectada.
