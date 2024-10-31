@@ -14,7 +14,7 @@ func tarefa(str chan string) {
 	fmt.Println("Goroutine recebeu:", msg)
 
 	str <- "Certo, entendido."
-
+        msg = <-str
 	fmt.Println("Goroutine: finalizando")
 }
 
