@@ -30,7 +30,7 @@ func main() {
 	str <- "Tudo bem! Vou terminar tá?"
 	msg = <-str
 	fmt.Println("Main recebeu:", msg)
-
+        str <- ""
 	fmt.Println("Main: finalizando")
 }
 
